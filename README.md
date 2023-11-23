@@ -22,10 +22,10 @@ Porcentaje de error promedio = 1.47 %
 Para el experimento se necesita un vaso con agua a temperatura superior a los 50 grados Celcius en donde se coloca la thermocupla a una escala de 10mV. Se requiere verificar la temperatura del vaso para luego dejar enfriar el vaso y obtener el comportamiento de la temperatura disminuyendo. Estos datos son guardados en la base de datos para poder ser procesados luego con un script de Python. Este script puede acceder a la base de datos y obtener los valores relevantes. Los ordena en listas que pueden ser manipuladas y con una funcion hecha por nosotros utilizando la ley de Newton de la temperatura se puede obtener el valor de K para 3 distintas mediciones junto con el K promedio de las 3 mediciones. 
 
 <p align="center">
-<img src="./images/graph.png" alt="Graficas Obtenidas de los 3 Experimentos" style="width:100%;" />
+<img src="./images/graph.png" alt="Graficas Obtenidas de los 3 Experimentos" style="width:50%;" />
 </p>
 <p align="center">
-<img src="./images/exp.jpg" alt="Demostracion de la termocupla en el agua" style="width:100%;" />
+<img src="./images/exp.jpg" alt="Demostracion de la termocupla en el agua" style="width:30%;" />
 </p>
 
 #### Codigo Utilizado para hacer los Calculos
