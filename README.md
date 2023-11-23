@@ -7,6 +7,24 @@ https://www.hackster.io/alexander-castro-oscar-rojas-sebastian-vega-sharon-valve
 ## Meidicion de Desempeño
 ### Tasa de Muestreo Efectiva y Jitter
 
+En cuanto a la medición de la tasa de muestreo efectiva, se utilizó el timer interno del Arduino UNO mediante los comandos millis y micros, de manera que se mantenga un periodo de muestreo de $200 \mu s$, equivalente a $5kHz$. En este punto es obtuvo se revisó el periodo de muestreo mediante la medición con osciloscopio como se observa a continuación.
+
+<p align="center">
+<img src="./images/Frec1.jpeg" alt="Medición del periodo de muestreo efectivo del sistema de adquisición de datos" style="width:50%;" />
+</p>
+
+Respecto a esta medición, se generaron los archivos .csv correspondientes, de manera que se lograra plantear los gráficos y así corroborar los valores de frecuencia y jitter presentes con base en sus cambios o flancos.
+
+<p align="center">
+<img src="./images/Jitter.PNG" alt="Ploteo de datos a partir de archivos .csv" style="width:60%;" />
+</p>
+
+Donde las diferencias entre los flancos fue de $\[419 \quad 583 \quad 1 \quad 418 \quad 1 \quad 583 \quad 419 \quad 580\]$ muestras, promediando en $375.5$ muestras. Por lo tanto, el jitter se obtuvo del siguiente cálculo al conocer el muestreo del osciloscopio utilizado (GW INSTEK GDS-1102-U - $250Msps$).
+
+$$Jitter = \frac{375.5 \quad muestras}{250\times 10^{6} \quad muestras/seg}$$
+
+$$Jitter = 1.502 \mu s$$
+
 ### Cuantificación de Error Estático y Dinámico
 #### Error Estático
 
