@@ -140,13 +140,13 @@ main()
 ### Circuito separado en Bloques
 Como ultimos cambios realizados al diseño de puede notar la adicion de la conexion al ADC y la forma en la que se va a controlar mediante los pines digitales del Arduino. Hay que tomar en cuenta que esto se necesita repetir para cada una de las escalas del circuito para asi tener que todas son controladas mediante el microcontrolador.
 <p align="center">
-<img src="./images/CircuitIsolation.jpg" alt="Circuito de Aislamiento de Tierras" style="width:40%;" />
+<img src="./images/CircuitIsolation.jpg" alt="Circuito de Aislamiento de Tierras" style="width:50%;" />
 </p>
 <p align="center">
-<img src="./images/InputAmplification.png" alt="Circuito de Amplificacion y de Escalas" style="width:40%;" />
+<img src="./images/InputAmplification.png" alt="Circuito de Amplificacion y de Escalas" style="width:50%;" />
 </p>
 <p align="center">
-<img src="./images/ConexionArduino.jpg" alt="Circuito representativo de la conexion con el ADC" style="width:40%;" />
+<img src="./images/ConexionArduino.jpg" alt="Circuito representativo de la conexion con el ADC" style="width:50%;" />
 </p>
 
 ### Codigo final del Microcontrolador
@@ -156,6 +156,10 @@ bool ch1 = true;
 bool ch2 = false;
 uint8_t valueCH1;
 uint8_t valueCH2;
+
+unsigned long Tprevio = 0;
+unsigned long Tactual = 0;
+const long intervalo = 200; % Tiempo en microsegundos
 
 void setup() {
   // put your setup code here, to run once:
@@ -179,16 +183,20 @@ void setup() {
 
 void loop() {
   
-  
-  //  PARA EL CHANNEL 1 ******************************************************
-  ADMUX |= B01000010; // Default VCC Reference Y Se lee el pin A2
-  ADCSRA |= B11000000; // ADEN and ADSC equal to 1 (Start conversion)
+  Tactual = micros();
 
-  while (bit_is_set(ADCSRA, ADSC)){  // Espera finalizar conversion
-    valueCH1 = ADCL;
-  }
-  if (ch1) {Serial.write(valueCH1);}
-  
+  if ((Tactual - Tprevio) >= intervalo){
+    Tprevio = Tactual;
+    //  PARA EL CHANNEL 1 ******************************************************
+    ADMUX |= B01000010; // Default VCC Reference Y Se lee el pin A2
+    ADCSRA |= B11000000; // ADEN and ADSC equal to 1 (Start conversion)
+
+    while (bit_is_set(ADCSRA, ADSC)){  // Espera finalizar conversion
+        valueCH1 = ADCL;
+    }
+    if (ch1) {Serial.write(valueCH1);}
+
+  }  
 
   //  PARA EL CHANNEL 2 ******************************************************
   ADMUX |= B01000100; // Default VCC Reference Y Se lee el pin A2
@@ -248,11 +256,11 @@ void loop() {
       digitalWrite(6, LOW);
     }
 
-    if (mensajeCPU == '*') {ch1 = !ch1;}
-    else if (mensajeCPU == '/') {ch2 = !ch2;}
+    if (mensajeCPU == '*') {ch1 = true;}
+    else if (mensajeCPU == '+') {ch1 = false;}
+    else if (mensajeCPU == '/') {ch2 = true;}
+    else if (mensajeCPU == '-') {ch2 = false;}
   }
-
-  delay(50);
 }
 ```
 
