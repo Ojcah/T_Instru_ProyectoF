@@ -25,6 +25,8 @@ Para el experimento se necesita un vaso con agua a temperatura superior a los 50
 ```python 
 import pyodbc
 import pandas as pd
+from matplotlib import pyplot as plt
+
 
 def read_db(muestraID,conexion):
     query = f"SELECT * FROM Dato WHERE muestraID='{muestraID}'"
@@ -34,8 +36,16 @@ def read_db(muestraID,conexion):
 # Funcion para crear la lista de datos obtenidos
 def crear_lista(data):
     lista = []
+    j = 0
     for i in data.valor:
-        lista.append(i)
+        if (j >= 1):
+            if (i > 1.1*lista[j-1]) or (i < (lista[j-1] - (1.2*lista[j-1]-lista[j-1]))):
+                lista.append(lista[j-1])
+            else:
+                lista.append(i)
+        else:
+            lista.append(i)
+        j += 1
 
     return lista
 
@@ -59,9 +69,9 @@ def main():
     cursor = cnxn.cursor()
 
     # Leer la Base de Datos
-    data1 = read_db(5,cnxn)
-    data2 = read_db(10,cnxn)
-    data3 = read_db(10,cnxn)
+    data1 = read_db(13,cnxn)
+    data2 = read_db(15,cnxn)
+    data3 = read_db(16,cnxn)
 
 
     # Crear las Listas
@@ -76,14 +86,22 @@ def main():
     tasa_muestreo = 50
 
     # Calcular la constante k para cada lista de temperaturas
-    k1 = calcular_constante_k(lista1, tasa_muestreo,temperatura_ambiente)
-    k2 = calcular_constante_k(lista2, tasa_muestreo,temperatura_ambiente)
-    k3 = calcular_constante_k(lista3, tasa_muestreo,temperatura_ambiente)
+    k1 = round(calcular_constante_k(lista1, tasa_muestreo,temperatura_ambiente),5)
+    k2 = round(calcular_constante_k(lista2, tasa_muestreo,temperatura_ambiente),5)
+    k3 = round(calcular_constante_k(lista3, tasa_muestreo,temperatura_ambiente),5)
 
     # Tomar el promedio de las constantes k de los tres experimentos
-    constante_k_promedio = (k1 + k2 + k3) / 3
-
+    constante_k_promedio = round((k1 + k2 + k3) / 3,2)
+    plt.plot(lista1,label = f"Prueba 1: {k1}")
+    plt.plot(lista2,label = f"Prueba 2: {k2}")
+    plt.plot(lista3,label = f"Prueba 3: {k3}")
+    plt.xlabel("Muestras")
+    plt.ylabel("Temperatura (C)")
+    plt.legend()
+    plt.show()
     print(f"Constante K de los primeros datos: {k1}")
+    print(f"Constante K de los segundos datos: {k2}")
+    print(f"Constante K de los terceros datos: {k3}")
     print(f"Constante k promedio: {constante_k_promedio}")
 
 main()
