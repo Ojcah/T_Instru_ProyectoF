@@ -1,4 +1,4 @@
-# T_Instru_ProyectoF
+# Proyecto Final de Taller de Instrumentación
 
 ## Nota Divulgativa
 La nota divulgativa se puede acceder por medio del siguiente link:
