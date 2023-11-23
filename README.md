@@ -1,5 +1,9 @@
 # T_Instru_ProyectoF
 
+## Nota Divulgativa
+La nota divulgativa se puede acceder por medio del siguiente link:
+https://www.hackster.io/alexander-castro-oscar-rojas-sebastian-vega-sharon-valverde/diseno-y-comprobacion-de-un-sistema-de-adquisicion-de-datos-dce968
+
 ## Meidicion de Desempeño
 ### Tasa de Muestreo Efectiva y Jitter
 
