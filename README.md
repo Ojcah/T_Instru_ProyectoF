@@ -135,3 +135,124 @@ def main():
 
 main()
 ```
+
+## Diseño Final
+### Circuito separado en Bloques
+Como ultimos cambios realizados al diseño de puede notar la adicion de la conexion al ADC y la forma en la que se va a controlar mediante los pines digitales del Arduino. Hay que tomar en cuenta que esto se necesita repetir para cada una de las escalas del circuito para asi tener que todas son controladas mediante el microcontrolador.
+<p align="center">
+<img src="./images/CircuitoIsolation.jpg" alt="Circuito de Aislamiento de Tierras" style="width:30%;" />
+</p>
+<p align="center">
+<img src="./images/InputAmplification.png" alt="Circuito de Amplificacion y de Escalas" style="width:30%;" />
+</p>
+<p align="center">
+<img src="./images/ConexionArduino.jpg" alt="Circuito representativo de la conexion con el ADC" style="width:30%;" />
+</p>
+
+### Codigo final del Microcontrolador
+
+```c
+bool ch1 = true;
+bool ch2 = false;
+uint8_t valueCH1;
+uint8_t valueCH2;
+
+void setup() {
+  // put your setup code here, to run once:
+
+  Serial.begin(115200); // Valor maximo para arduino (Normalmente 9600)
+
+  ADCSRA |= B00000111; // Prescalar set to 128 -> 125 kHz
+
+  pinMode(2,OUTPUT);  // Para escala 10mV
+  pinMode(3,OUTPUT);  // Para escala 1V
+  pinMode(4,OUTPUT);  // Para escala 2.5V
+  pinMode(5,OUTPUT);  // Para escala 5V
+  pinMode(6,OUTPUT);  // Para escala 10V
+
+  digitalWrite(2, LOW);
+  digitalWrite(3, LOW);
+  digitalWrite(4,LOW);
+  digitalWrite(5,LOW);
+  digitalWrite(6, LOW);
+}
+
+void loop() {
+  
+  
+  //  PARA EL CHANNEL 1 ******************************************************
+  ADMUX |= B01000010; // Default VCC Reference Y Se lee el pin A2
+  ADCSRA |= B11000000; // ADEN and ADSC equal to 1 (Start conversion)
+
+  while (bit_is_set(ADCSRA, ADSC)){  // Espera finalizar conversion
+    valueCH1 = ADCL;
+  }
+  if (ch1) {Serial.write(valueCH1);}
+  
+
+  //  PARA EL CHANNEL 2 ******************************************************
+  ADMUX |= B01000100; // Default VCC Reference Y Se lee el pin A2
+  ADCSRA |= B11000000; // ADEN and ADSC equal to 1 (Start conversion)
+
+  while (bit_is_set(ADCSRA, ADSC)){  // Espera finalizar conversion
+    valueCH2 = ADCL;
+  } 
+  if (ch2) {Serial.write(valueCH2);}
+
+
+  //  CONTROLES PARA LABVIEW ******************************************************
+
+  if (Serial.available() > 0) {
+    char mensajeCPU = Serial.read();
+
+    if (mensajeCPU == '@') {
+      digitalWrite(2, HIGH);
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(5, LOW);
+      digitalWrite(6, LOW);
+      }
+    else if (mensajeCPU == '#') {
+      digitalWrite(3, HIGH);
+      digitalWrite(2, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(5, LOW);
+      digitalWrite(6, LOW);
+    }
+    else if (mensajeCPU == '$') {
+      digitalWrite(4, HIGH);
+      digitalWrite(2, LOW);
+      digitalWrite(3, LOW);
+      digitalWrite(5, LOW);
+      digitalWrite(6, LOW);
+      }
+    else if (mensajeCPU == '%') {
+      digitalWrite(5, HIGH);
+      digitalWrite(2, LOW);
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(6, LOW);
+      }
+    else if (mensajeCPU == '&') {
+      digitalWrite(6, HIGH);
+      digitalWrite(2, LOW);
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(5, LOW);
+      }
+    else {
+      digitalWrite(2, LOW);
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      digitalWrite(5, LOW);
+      digitalWrite(6, LOW);
+    }
+
+    if (mensajeCPU == '*') {ch1 = !ch1;}
+    else if (mensajeCPU == '/') {ch2 = !ch2;}
+  }
+
+  delay(50);
+}
+```
+
