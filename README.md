@@ -140,13 +140,13 @@ main()
 ### Circuito separado en Bloques
 Como ultimos cambios realizados al diseño de puede notar la adicion de la conexion al ADC y la forma en la que se va a controlar mediante los pines digitales del Arduino. Hay que tomar en cuenta que esto se necesita repetir para cada una de las escalas del circuito para asi tener que todas son controladas mediante el microcontrolador.
 <p align="center">
-<img src="./images/CircuitoIsolation.jpg" alt="Circuito de Aislamiento de Tierras" style="width:30%;" />
+<img src="./images/CircuitIsolation.jpg" alt="Circuito de Aislamiento de Tierras" style="width:40%;" />
 </p>
 <p align="center">
-<img src="./images/InputAmplification.png" alt="Circuito de Amplificacion y de Escalas" style="width:30%;" />
+<img src="./images/InputAmplification.png" alt="Circuito de Amplificacion y de Escalas" style="width:40%;" />
 </p>
 <p align="center">
-<img src="./images/ConexionArduino.jpg" alt="Circuito representativo de la conexion con el ADC" style="width:30%;" />
+<img src="./images/ConexionArduino.jpg" alt="Circuito representativo de la conexion con el ADC" style="width:40%;" />
 </p>
 
 ### Codigo final del Microcontrolador
